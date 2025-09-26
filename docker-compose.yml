@@ -1,0 +1,57 @@
+services:
+  nodejs-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nodejs-api-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount the current directory to /app for hot reload (Windows compatible)
+      - type: bind
+        source: .
+        target: /app
+        consistency: cached
+      # Exclude node_modules from being overwritten by the host
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=1000
+    # Restart policy
+    restart: unless-stopped
+    # Keep container running for development
+    tty: true
+    stdin_open: true
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: MongoDB service for database
+  # mongodb:
+  #   image: mongo:6-jammy
+  #   container_name: nodejs-api-mongodb
+  #   ports:
+  #     - "27017:27017"
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=admin
+  #     - MONGO_INITDB_ROOT_PASSWORD=password
+  #   volumes:
+  #     - mongodb_data:/data/db
+  #   restart: unless-stopped
+
+  # Optional: Redis service for caching
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: nodejs-api-redis
+  #   ports:
+  #     - "6379:6379"
+  #   restart: unless-stopped
+
+# volumes:
+#   mongodb_data:

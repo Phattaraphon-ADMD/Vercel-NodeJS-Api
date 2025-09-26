@@ -1,0 +1,11 @@
+{
+  "watch": ["src"],
+  "ext": "js,json",
+  "ignore": ["src/**/*.test.js"],
+  "delay": "500",
+  "legacyWatch": true,
+  "polling": true,
+  "env": {
+    "NODE_ENV": "development"
+  }
+}

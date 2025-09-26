@@ -1,0 +1,29 @@
+{
+  "name": "nodejs-docker-api",
+  "version": "1.0.0",
+  "description": "Node.js API with Docker for development with hot reload",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "build": "echo 'Build completed'",
+    "vercel-build": "echo 'Vercel build completed'",
+    "docker:build": "docker build -t nodejs-api .",
+    "docker:run": "docker run -p 3000:3000 nodejs-api",
+    "docker:dev": "docker-compose up --build",
+    "docker:dev:detached": "docker-compose up --build -d",
+    "docker:stop": "docker-compose down"
+  },
+  "keywords": ["nodejs", "api", "docker", "express", "hot-reload"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
