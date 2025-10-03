@@ -28,3 +28,24 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/nodejs-test-cicd:${{ steps.vars.outputs.SHORT_SHA }}
+
+      - name: Update Helm values for ArgoCD
+        if: success()
+        run: |
+          # Clone the Helm repository
+          git clone https://${{ secrets.PAT_TOKEN }}@github.com/Phattaraphon-ADMD/NodejsDocker-Helm.git helm-repo
+          cd helm-repo
+          
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Update the image tag in values.yaml
+          sed -i 's/tag: .*/tag: "${{ steps.vars.outputs.SHORT_SHA }}"/' my-app-chart/values.yaml
+          
+          # Commit and push changes
+          git add my-app-chart/values.yaml
+          git commit -m "Update image tag to ${{ steps.vars.outputs.SHORT_SHA }}"
+          git push origin main
+          
+          echo "Successfully updated Helm values with new image tag: ${{ steps.vars.outputs.SHORT_SHA }}"
